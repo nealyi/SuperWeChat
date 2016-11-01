@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+    <ImageView
+            android:id="@+id/iv_back"
+            android:visibility="gone"
+            android:paddingLeft="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_back"/>
+
+
+    <TextView
+            android:id="@+id/tv_title"
+            android:visibility="gone"
+            android:paddingLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="微信"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    <TextView
+            android:id="@+id/tv_common_title"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:text="微信"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"/>
+
+    <ImageView
+            android:id="@+id/iv_add"
+            android:visibility="gone"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:src="@drawable/icon_add"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+</RelativeLayout>
