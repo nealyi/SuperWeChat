@@ -7,7 +7,7 @@
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="22"
+        android:targetSdkVersion="23"
         tools:overrideLibrary="com.easemob.redpacketui" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
