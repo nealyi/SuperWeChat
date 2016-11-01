@@ -123,9 +123,9 @@
 
         <TextView
             android:text="@string/confirmpassword"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:textColor="#000"
-            android:layout_width="140dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"/>
 
         <EditText
