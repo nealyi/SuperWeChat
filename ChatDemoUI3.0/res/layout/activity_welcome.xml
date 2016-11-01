@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splash_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/black">
+
+    <ImageView
+        android:id="@+id/iv_splash_logo"
+        android:layout_marginTop="80dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon_logo"/>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:background="@color/btn_gray_normal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dip"
+        android:text="@string/register"
+        android:textColor="#000"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:background="@color/btn_green_noraml"
+        android:layout_above="@id/btn_register"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dip"
+        android:text="@string/login"
+        android:textColor="#fff"
+        android:textSize="18sp"/>
+</RelativeLayout>
