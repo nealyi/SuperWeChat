@@ -15,7 +15,7 @@ package com.hyphenate.chatuidemo.ui;
 
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chatuidemo.DemoHelper;
+import com.hyphenate.chatuidemo.SuperWeChatHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.exceptions.HyphenateException;
 
@@ -80,7 +80,7 @@ public class RegisterActivity extends BaseActivity {
                                 if (!RegisterActivity.this.isFinishing())
                                     pd.dismiss();
                                 // save current user
-                                DemoHelper.getInstance().setCurrentUserName(username);
+                                SuperWeChatHelper.getInstance().setCurrentUserName(username);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
                                 finish();
                             }
