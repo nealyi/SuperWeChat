@@ -21,9 +21,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
@@ -119,7 +121,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void registerAppServer() {
-        L.e(TAG,"registerAppServer()");
+        L.e(TAG, "registerAppServer()");
         NetDao.register(mContext, username, nickname, password, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
@@ -127,7 +129,7 @@ public class RegisterActivity extends BaseActivity {
                     pd.dismiss();
                 } else {
                     if (result.isRetMsg()) {
-                        L.e(TAG,"registerAppServer() onSuccess");
+                        L.e(TAG, "registerAppServer() onSuccess");
                         registerEMServer();
                     } else {
                         if (result.getRetCode() == I.MSG_REGISTER_USERNAME_EXISTS) {
@@ -148,7 +150,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void unregisterAppServer() {
-        L.e(TAG,"unregisterAppServer()");
+        L.e(TAG, "unregisterAppServer()");
         NetDao.unregister(mContext, username, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
@@ -164,12 +166,12 @@ public class RegisterActivity extends BaseActivity {
 
 
     private void registerEMServer() {
-        L.e(TAG,"registerEMServer()");
+        L.e(TAG, "registerEMServer()");
         new Thread(new Runnable() {
             public void run() {
                 try {
                     // call method in SDK
-                    EMClient.getInstance().createAccount(username, password);
+                    EMClient.getInstance().createAccount(username, MD5.getMessageDigest(password));
                     runOnUiThread(new Runnable() {
                         public void run() {
                             if (!RegisterActivity.this.isFinishing())
