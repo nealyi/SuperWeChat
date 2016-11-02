@@ -30,16 +30,21 @@ import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.nealyi.superwechat.I;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.SuperWeChatApplication;
 import com.nealyi.superwechat.SuperWeChatHelper;
+import com.nealyi.superwechat.bean.Result;
 import com.nealyi.superwechat.db.SuperWeChatDBManager;
+import com.nealyi.superwechat.db.UserDao;
 import com.nealyi.superwechat.utils.L;
 import com.nealyi.superwechat.utils.MD5;
 import com.nealyi.superwechat.utils.MFGT;
 import com.nealyi.superwechat.utils.NetDao;
 import com.nealyi.superwechat.utils.OkHttpUtils;
+import com.nealyi.superwechat.utils.ResultUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -196,9 +201,27 @@ public class LoginActivity extends BaseActivity {
     private void loginAppServer() {
         NetDao.login(mContext, currentUsername, currentPassword, new OkHttpUtils.OnCompleteListener<String>() {
             @Override
-            public void onSuccess(String result) {
-                L.e(TAG, "result=" + result);
-                loginSuccess();
+            public void onSuccess(String s) {
+                L.e(TAG, "s=" + s);
+                if (s != null && s != "") {
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                    L.e(TAG, "result=" + result);
+                    if (result != null && result.isRetMsg()) {
+                        User user = (User) result.getRetData();
+                        L.e(TAG, "user=" + user);
+                        if (user != null) {
+                            UserDao dao = new UserDao(mContext);
+                            dao.saveUser(user);
+                            SuperWeChatHelper.getInstance().setCurrentUser(user);
+                            loginSuccess();
+                        } else {
+                            pd.dismiss();
+                            L.e(TAG, "login fail," + result);
+                        }
+                    } else {
+                        pd.dismiss();
+                    }
+                }
             }
 
             @Override
@@ -240,6 +263,12 @@ public class LoginActivity extends BaseActivity {
         if (autoLogin) {
             return;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        pd.dismiss();
     }
 
     @OnClick({R.id.iv_back, R.id.btn_login})
