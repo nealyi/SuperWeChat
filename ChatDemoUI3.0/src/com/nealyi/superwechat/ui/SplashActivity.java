@@ -52,7 +52,6 @@ public class SplashActivity extends BaseActivity {
                     UserDao dao = new UserDao(mContext);
                     User user = dao.getUser(EMClient.getInstance().getCurrentUser());
                     L.e(TAG, "user=" + user);
-                    SuperWeChatHelper.getInstance().setCurrentUser(user);
                     long costTime = System.currentTimeMillis() - start;
                     //wait
                     if (sleepTime - costTime > 0) {
