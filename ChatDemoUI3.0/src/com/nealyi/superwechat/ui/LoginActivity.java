@@ -268,7 +268,9 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        pd.dismiss();
+        if (pd != null) {
+            pd.dismiss();
+        }
     }
 
     @OnClick({R.id.iv_back, R.id.btn_login})
