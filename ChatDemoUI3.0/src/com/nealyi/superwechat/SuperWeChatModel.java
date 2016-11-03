@@ -2,6 +2,7 @@ package com.nealyi.superwechat;
 
 import android.content.Context;
 
+import com.hyphenate.easeui.domain.User;
 import com.nealyi.superwechat.db.UserDao;
 import com.nealyi.superwechat.domain.RobotUser;
 import com.nealyi.superwechat.utils.PreferenceManager;
@@ -298,5 +299,21 @@ public class SuperWeChatModel {
         SpakerOn,
         DisabledGroups,
         DisabledIds
+    }
+
+    public void saveAppContact(User user){
+        UserDao dao = new UserDao(context);
+        dao.saveAppContact(user);
+    }
+
+    public Map<String, User> getAppContactList() {
+        UserDao dao = new UserDao(context);
+        return dao.getAppContactList();
+    }
+
+    public boolean saveAppContactList(List<User> contactList) {
+        UserDao dao = new UserDao(context);
+        dao.saveAppContactList(contactList);
+        return true;
     }
 }
