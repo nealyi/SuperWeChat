@@ -27,8 +27,13 @@ import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.SuperWeChatHelper;
+import com.nealyi.superwechat.bean.Result;
 import com.nealyi.superwechat.utils.CommonUtils;
+import com.nealyi.superwechat.utils.L;
 import com.nealyi.superwechat.utils.MFGT;
+import com.nealyi.superwechat.utils.NetDao;
+import com.nealyi.superwechat.utils.OkHttpUtils;
+import com.nealyi.superwechat.utils.ResultUtils;
 
 import java.io.ByteArrayOutputStream;
 
@@ -158,6 +163,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                         }
                     });
                 } else {
+                    updateAppNick(nickName);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -171,6 +177,42 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             }
         }).start();
     }
+
+    private void updateAppNick(String nickName) {
+        NetDao.updateNick(this, username, nickName, new OkHttpUtils.OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                    L.e(TAG, "result=" + result);
+                    if (result != null && result.isRetMsg()) {
+                        User u = (User) result.getRetData();
+                        updateUser(u);
+                    } else {
+                        updateFail();
+                    }
+                } else {
+                    updateFail();
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                L.e(TAG, "error=" + error);
+            }
+        });
+    }
+
+    private void updateUser(User u) {
+        SuperWeChatHelper.getInstance().saveAppContact(u);
+    }
+
+    private void updateFail() {
+        Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_fail), Toast.LENGTH_SHORT)
+                .show();
+        dialog.dismiss();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
