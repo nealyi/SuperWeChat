@@ -146,4 +146,6 @@
     <string name="Nickname_cannot_be_empty">昵称不能为空!</string>
     <string name="User_name_illegal">用户名非法!请输入6~15位字母或数字!</string>
     <string name="Nickname_illegal">昵称非法!请输入6~15位字母或数字!</string>
+    <string name="User_name_cannot_be_modify">微信号不能修改</string>
+    <string name="toast_nick_not_modify">昵称没有修改</string>
 </resources>

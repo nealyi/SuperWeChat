@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.ui.MainActivity;
 import com.nealyi.superwechat.ui.SettingsActivity;
+import com.nealyi.superwechat.ui.UserProfileActivity;
 
 
 public class MFGT {
@@ -25,5 +26,9 @@ public class MFGT {
 
     public static void gotoSettingActivity(Activity context){
         startActivity(context, SettingsActivity.class);
+    }
+
+    public static void gotoUserProfile(Activity context){
+        startActivity(context, UserProfileActivity.class);
     }
 }

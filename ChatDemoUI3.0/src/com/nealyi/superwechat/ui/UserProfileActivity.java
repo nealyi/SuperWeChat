@@ -1,15 +1,5 @@
 package com.nealyi.superwechat.ui;
 
-import java.io.ByteArrayOutputStream;
-
-import com.bumptech.glide.Glide;
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMClient;
-import com.nealyi.superwechat.SuperWeChatHelper;
-import com.nealyi.superwechat.R;
-import com.hyphenate.easeui.domain.EaseUser;
-import com.hyphenate.easeui.utils.EaseUserUtils;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -26,99 +16,75 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
+import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.nealyi.superwechat.R;
+import com.nealyi.superwechat.SuperWeChatHelper;
+import com.nealyi.superwechat.utils.CommonUtils;
+import com.nealyi.superwechat.utils.MFGT;
+
+import java.io.ByteArrayOutputStream;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener {
     private static final String TAG = UserProfileActivity.class.getSimpleName();
 
     private static final int REQUESTCODE_PICK = 1;
     private static final int REQUESTCODE_CUTTING = 2;
-    private ImageView headAvatar;
-    private ImageView headPhotoUpdate;
-    private ImageView iconRightArrow;
-    private TextView tvNickName;
-    private TextView tvUsername;
+    @BindView(R.id.iv_back)
+    ImageView mIvBack;
+    @BindView(R.id.tv_common_title)
+    TextView mTvCommonTitle;
+    @BindView(R.id.iv_avatar)
+    ImageView mIvAvatar;
+    @BindView(R.id.tv_nick)
+    TextView mTvNick;
+    @BindView(R.id.tv_username)
+    TextView mTvUsername;
+    @BindView(R.id.tv_QRCode)
+    ImageView mTvQRCode;
+    @BindView(R.id.tv_sex)
+    TextView mTvSex;
+    @BindView(R.id.tv_area)
+    TextView mTvArea;
+    @BindView(R.id.tv_autograph)
+    TextView mTvAutograph;
     private ProgressDialog dialog;
-    private RelativeLayout rlNickName;
+    String username;
 
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_user_profile);
+        ButterKnife.bind(this);
         initView();
-        initListener();
+        setListener();
     }
 
     private void initView() {
-        headAvatar = (ImageView) findViewById(R.id.user_head_avatar);
-        headPhotoUpdate = (ImageView) findViewById(R.id.user_head_headphoto_update);
-        tvUsername = (TextView) findViewById(R.id.user_username);
-        tvNickName = (TextView) findViewById(R.id.user_nickname);
-        rlNickName = (RelativeLayout) findViewById(R.id.rl_nickname);
-        iconRightArrow = (ImageView) findViewById(R.id.ic_right_arrow);
+        mIvBack.setVisibility(View.VISIBLE);
+        mTvCommonTitle.setVisibility(View.VISIBLE);
+        mTvCommonTitle.setText(R.string.title_user_profile);
+        username = EMClient.getInstance().getCurrentUser();
     }
 
-    private void initListener() {
-        Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
-        boolean enableUpdate = intent.getBooleanExtra("setting", false);
-        if (enableUpdate) {
-            headPhotoUpdate.setVisibility(View.VISIBLE);
-            iconRightArrow.setVisibility(View.VISIBLE);
-            rlNickName.setOnClickListener(this);
-            headAvatar.setOnClickListener(this);
-        } else {
-            headPhotoUpdate.setVisibility(View.GONE);
-            iconRightArrow.setVisibility(View.INVISIBLE);
-        }
-        if (username != null) {
-//            if (username.equals(EMClient.getInstance().getCurrentUser())) {
-//                tvUsername.setText(EMClient.getInstance().getCurrentUser());
-//                EaseUserUtils.setUserNick(username, tvNickName);
-//                EaseUserUtils.setUserAvatar(this, username, headAvatar);
-//            } else {
-//                tvUsername.setText(username);
-                EaseUserUtils.setUserNick(username, tvNickName);
-//                EaseUserUtils.setUserAvatar(this, username, headAvatar);
-//                asyncFetchUserInfo(username);
-//            }
-
-            tvUsername.setText(username);
-            EaseUserUtils.setAppUserNick(username, tvNickName);
-            EaseUserUtils.setAppUserAvatar(this, username, headAvatar);
-        }
+    private void setListener() {
+        EaseUserUtils.setCurrentUserAvatar(this, mIvAvatar);
+        EaseUserUtils.setCurrentUserNameWithNo(mTvUsername);
+        EaseUserUtils.setCurrentUserNick(mTvNick);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.user_head_avatar:
-                uploadHeadPhoto();
-                break;
-            case R.id.rl_nickname:
-                final EditText editText = new EditText(this);
-                new AlertDialog.Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
-                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String nickString = editText.getText().toString();
-                                if (TextUtils.isEmpty(nickString)) {
-                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                updateRemoteNick(nickString);
-                            }
-                        }).setNegativeButton(R.string.dl_cancel, null).show();
-                break;
-            default:
-                break;
-        }
-
-    }
 
     public void asyncFetchUserInfo(String username) {
         SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<EaseUser>() {
@@ -130,11 +96,11 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                     if (isFinishing()) {
                         return;
                     }
-                    tvNickName.setText(user.getNick());
+                    mTvNick.setText(user.getNick());
                     if (!TextUtils.isEmpty(user.getAvatar())) {
-                        Glide.with(UserProfileActivity.this).load(user.getAvatar()).placeholder(R.drawable.em_default_avatar).into(headAvatar);
+                        Glide.with(UserProfileActivity.this).load(user.getAvatar()).placeholder(R.drawable.em_default_avatar).into(mIvAvatar);
                     } else {
-                        Glide.with(UserProfileActivity.this).load(R.drawable.em_default_avatar).into(headAvatar);
+                        Glide.with(UserProfileActivity.this).load(R.drawable.em_default_avatar).into(mIvAvatar);
                     }
                 }
             }
@@ -147,7 +113,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
 
     private void uploadHeadPhoto() {
-        AlertDialog.Builder builder = new Builder(this);
+        Builder builder = new Builder(this);
         builder.setTitle(R.string.dl_title_upload_photo);
         builder.setItems(new String[]{getString(R.string.dl_msg_take_photo), getString(R.string.dl_msg_local_upload)},
                 new DialogInterface.OnClickListener() {
@@ -198,7 +164,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                             dialog.dismiss();
                             Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_success), Toast.LENGTH_SHORT)
                                     .show();
-                            tvNickName.setText(nickName);
+                            mTvNick.setText(nickName);
                         }
                     });
                 }
@@ -249,7 +215,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(getResources(), photo);
-            headAvatar.setImageDrawable(drawable);
+            mIvAvatar.setImageDrawable(drawable);
             uploadUserAvatar(Bitmap2Bytes(photo));
         }
 
@@ -289,4 +255,52 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
     }
+
+    @OnClick({R.id.iv_back, R.id.rl_avatar, R.id.rl_nick, R.id.rl_username, R.id.rl_QRCode, R.id.rl_address, R.id.rl_sex, R.id.rl_area, R.id.rl_autograph})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                MFGT.finish(this);
+                break;
+            case R.id.rl_avatar:
+                uploadHeadPhoto();
+                break;
+            case R.id.rl_nick:
+                final EditText editText = new EditText(this);
+                editText.setText(mTvNick.getText().toString().trim());
+                new AlertDialog.Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
+                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String nickString = editText.getText().toString().trim();
+                                if (TextUtils.isEmpty(nickString)) {
+                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                if (nickString.equals(mTvNick.getText().toString().trim())) {
+                                    CommonUtils.showShortToast(R.string.toast_nick_not_modify);
+                                    return;
+                                }
+                                updateRemoteNick(nickString);
+                            }
+                        }).setNegativeButton(R.string.dl_cancel, null).show();
+                break;
+            case R.id.rl_username:
+                CommonUtils.showShortToast(R.string.User_name_cannot_be_modify);
+                break;
+            case R.id.rl_QRCode:
+                break;
+            case R.id.rl_address:
+                break;
+            case R.id.rl_sex:
+                break;
+            case R.id.rl_area:
+                break;
+            case R.id.rl_autograph:
+                break;
+        }
+    }
+
+
 }
