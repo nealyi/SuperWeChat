@@ -392,7 +392,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
             exceptionBuilder = null;
             isExceptionDialogShow = false;
         }
-        unregisterBroadcastReceiver();
+//        unregisterBroadcastReceiver();
 
         try {
             unregisterReceiver(internalDebugReceiver);

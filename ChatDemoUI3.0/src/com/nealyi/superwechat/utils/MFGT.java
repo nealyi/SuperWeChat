@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.ui.MainActivity;
+import com.nealyi.superwechat.ui.SettingsActivity;
 
 
 public class MFGT {
@@ -20,5 +21,9 @@ public class MFGT {
         intent.setClass(context,cls);
         context.startActivity(intent);
         context.overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+    }
+
+    public static void gotoSettingActivity(Activity context){
+        startActivity(context, SettingsActivity.class);
     }
 }

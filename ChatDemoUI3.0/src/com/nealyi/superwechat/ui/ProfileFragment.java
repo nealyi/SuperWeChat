@@ -14,6 +14,7 @@ import com.easemob.redpacketui.utils.RedPacketUtil;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.nealyi.superwechat.Constant;
 import com.nealyi.superwechat.R;
+import com.nealyi.superwechat.utils.MFGT;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,6 +65,7 @@ public class ProfileFragment extends Fragment {
                 break;
             //end of red packet code
             case R.id.ll_setting:
+                MFGT.gotoSettingActivity(getActivity());
                 break;
         }
     }

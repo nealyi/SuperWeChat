@@ -1,43 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/common_bg"
-    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/common_bg"
+              android:orientation="vertical">
 
-    <com.hyphenate.easeui.widget.EaseTitleBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:titleBarTitle="@string/set"
-        />
+    <include layout="@layout/common_head_title"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fadingEdge="none" >
+        android:fadingEdge="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
-            <LinearLayout
-                android:id="@+id/ll_change"
-                android:layout_width="match_parent"
-                android:layout_height="50dip"
-                android:background="@drawable/em_btn_bottom_selector"
-                android:padding="10dip"
-                >
+            android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="10dip"
-                    android:text="@string/change"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    />
-            </LinearLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
@@ -45,13 +25,14 @@
                 android:layout_marginRight="10dp"
                 android:background="@color/btn_gray_normal"
                 />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:layout_marginTop="10dip"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -59,25 +40,25 @@
                     android:gravity="bottom|left"
                     android:paddingLeft="10dip"
                     android:text="@string/notify"
-                    android:textColor="@color/btn_gray_pressed" />
+                    android:textColor="@color/btn_gray_pressed"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
-                    android:background="@color/btn_gray_normal" />
+                    android:background="@color/btn_gray_normal"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/rl_switch_notification"
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -87,14 +68,14 @@
                         android:text="@string/newnotify"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:typeface="serif"/>
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
+                        android:id="@+id/switch_notification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/switch_notification"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"/>
                 </RelativeLayout>
 
                 <TextView
@@ -103,14 +84,14 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
-                    android:background="#E6E6E6" />
+                    android:background="#E6E6E6"/>
 
                 <RelativeLayout
                     android:id="@+id/rl_switch_sound"
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -120,14 +101,14 @@
                         android:text="@string/voice"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:typeface="serif"/>
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
+                        android:id="@+id/switch_sound"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/switch_sound"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"/>
                 </RelativeLayout>
 
                 <TextView
@@ -136,14 +117,14 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
-                    android:background="#E6E6E6" />
+                    android:background="#E6E6E6"/>
 
                 <RelativeLayout
                     android:id="@+id/rl_switch_vibrate"
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -153,14 +134,14 @@
                         android:text="@string/shake"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:typeface="serif"/>
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
+                        android:id="@+id/switch_vibrate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/switch_vibrate"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"/>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -169,7 +150,7 @@
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
                     android:layout_marginTop="10dip"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -177,12 +158,12 @@
                         android:gravity="bottom|left"
                         android:paddingLeft="10dip"
                         android:text="@string/chatset"
-                        android:textColor="@color/btn_gray_pressed" />
+                        android:textColor="@color/btn_gray_pressed"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="1dip"
-                        android:background="@color/btn_gray_normal" />
+                        android:background="@color/btn_gray_normal"/>
                 </LinearLayout>
 
                 <RelativeLayout
@@ -190,7 +171,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -200,14 +181,14 @@
                         android:text="@string/yangshengqi"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:typeface="serif"/>
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
+                        android:id="@+id/switch_speaker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/switch_speaker"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"/>
                 </RelativeLayout>
 
                 <View
@@ -215,42 +196,42 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:background="@color/btn_gray_normal"/>
 
                 <RelativeLayout
                     android:id="@+id/rl_custom_appkey"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <EditText
+                        android:id="@+id/edit_custom_appkey"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/edit_custom_appkey"
-                        android:minWidth="100dp"
                         android:layout_centerVertical="true"
+                        android:minWidth="100dp"
                         android:paddingLeft="10dip"
                         android:text="@string/set_custom_server"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:typeface="serif"/>
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
+                        android:id="@+id/switch_custom_appkey"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/switch_custom_appkey"
-                        app:switchStatus="close"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"
+                        app:switchStatus="close"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/set_custom_appkey"
-                        android:textSize="@dimen/size36px"
+                        android:layout_centerVertical="true"
                         android:layout_toLeftOf="@id/switch_custom_appkey"
-                        android:layout_centerVertical="true"/>
+                        android:text="@string/set_custom_appkey"
+                        android:textSize="@dimen/size36px"/>
                 </RelativeLayout>
 
 
@@ -259,7 +240,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -269,15 +250,15 @@
                         android:text="@string/set_custom_server"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:typeface="serif"/>
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
+                        android:id="@+id/switch_custom_server"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/switch_custom_server"
-                        app:switchStatus="close"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"
+                        app:switchStatus="close"/>
                 </RelativeLayout>
 
                 <View
@@ -285,7 +266,7 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:background="@color/btn_gray_normal"/>
 
 
                 <LinearLayout
@@ -293,7 +274,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -302,7 +283,7 @@
                         android:paddingLeft="10dip"
                         android:text="@string/title_user_profile"
                         android:textColor="@android:color/black"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </LinearLayout>
 
                 <View
@@ -310,7 +291,7 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:background="@color/btn_gray_normal"/>
 
 
                 <LinearLayout
@@ -318,7 +299,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -327,7 +308,7 @@
                         android:paddingLeft="10dip"
                         android:text="@string/book_black"
                         android:textColor="@android:color/black"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </LinearLayout>
 
                 <View
@@ -335,14 +316,14 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:background="@color/btn_gray_normal"/>
 
                 <LinearLayout
                     android:id="@+id/ll_diagnose"
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -351,7 +332,7 @@
                         android:paddingLeft="10dip"
                         android:text="@string/diagnose"
                         android:textColor="@android:color/black"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </LinearLayout>
 
                 <View
@@ -359,14 +340,14 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:background="@color/btn_gray_normal"/>
 
                 <LinearLayout
                     android:id="@+id/ll_set_push_nick"
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/em_btn_bottom_selector"
-                    android:padding="10dip" >
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -375,7 +356,7 @@
                         android:paddingLeft="10dip"
                         android:text="@string/push_nick"
                         android:textColor="@android:color/black"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -385,14 +366,14 @@
                 android:layout_height="1dip"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
-                android:background="#E6E6E6" />
+                android:background="#E6E6E6"/>
 
             <RelativeLayout
                 android:id="@+id/rl_switch_chatroom_owner_leave"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/em_btn_bottom_selector"
-                android:padding="10dip" >
+                android:padding="10dip">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -402,23 +383,23 @@
                     android:text="@string/chatroom_allow_owner_leave"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:typeface="serif" />
+                    android:typeface="serif"/>
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
+                    android:id="@+id/switch_owner_leave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/switch_owner_leave"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
 
-            
+
             <RelativeLayout
                 android:id="@+id/rl_switch_delete_msg_when_exit_group"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/em_btn_bottom_selector"
-                android:padding="10dip" >
+                android:padding="10dip">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -428,22 +409,22 @@
                     android:text="@string/delete_msg_when_exit_group"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:typeface="serif" />
+                    android:typeface="serif"/>
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
+                    android:id="@+id/switch_delete_msg_when_exit_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/switch_delete_msg_when_exit_group"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/rl_switch_auto_accept_group_invitation"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/em_btn_bottom_selector"
-                android:padding="10dip" >
+                android:padding="10dip">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -453,22 +434,22 @@
                     android:text="@string/auto_accept_group_invitation"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:typeface="serif" />
+                    android:typeface="serif"/>
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
+                    android:id="@+id/switch_auto_accept_group_invitation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/switch_auto_accept_group_invitation"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/rl_switch_adaptive_video_encode"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/em_btn_bottom_selector"
-                android:padding="10dip" >
+                android:padding="10dip">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -478,14 +459,14 @@
                     android:text="@string/adaptive_video_encode"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:typeface="serif" />
+                    android:typeface="serif"/>
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
+                    android:id="@+id/switch_adaptive_video_encode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/switch_adaptive_video_encode"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -493,7 +474,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/em_btn_bottom_selector"
-                android:padding="10dip" >
+                android:padding="10dip">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -503,14 +484,14 @@
                     android:text="@string/offline_call_push"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    android:typeface="serif" />
+                    android:typeface="serif"/>
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
+                    android:id="@+id/switch_offline_call_push"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/switch_offline_call_push"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
 
             <LinearLayout
@@ -518,7 +499,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dip"
                 android:background="#ffffff"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/btn_logout"
@@ -531,7 +512,7 @@
                     android:background="@drawable/em_btn_style_alert_dialog_special"
                     android:text="@string/button_logout"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
