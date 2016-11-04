@@ -146,4 +146,7 @@
     <string name="Nickname_cannot_be_empty">Nickname cannot be empty!</string>
     <string name="User_name_illegal">User name illegal! Please input 6~15 character or numbers!</string>
     <string name="Nickname_illegal">Nickname illegal! Please input 6~15 character or numbers!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
