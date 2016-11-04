@@ -24,7 +24,9 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
+import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.nealyi.superwechat.I;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.SuperWeChatHelper;
 import com.nealyi.superwechat.bean.Result;
@@ -35,7 +37,11 @@ import com.nealyi.superwechat.utils.NetDao;
 import com.nealyi.superwechat.utils.OkHttpUtils;
 import com.nealyi.superwechat.utils.ResultUtils;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -186,8 +192,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                     Result result = ResultUtils.getResultFromJson(s, User.class);
                     L.e(TAG, "result=" + result);
                     if (result != null && result.isRetMsg()) {
-                        User u = (User) result.getRetData();
-                        updateUser(u);
+                        User user = (User) result.getRetData();
+                        updateUser(user);
                     } else {
                         updateFail();
                     }
@@ -203,8 +209,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         });
     }
 
-    private void updateUser(User u) {
-        SuperWeChatHelper.getInstance().saveAppContact(u);
+    private void updateUser(User user) {
+        SuperWeChatHelper.getInstance().saveAppContact(user);
     }
 
     private void updateFail() {
@@ -225,13 +231,44 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                 break;
             case REQUESTCODE_CUTTING:
                 if (data != null) {
-                    setPicToView(data);
+                    updateAppUserAcatar(data);
+//                    setPicToView(data);
                 }
                 break;
             default:
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateAppUserAcatar(final Intent data) {
+        dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
+        dialog.show();
+        File file = saveBitmapFile(data);
+        NetDao.updateAvatar(this, username, file, new OkHttpUtils.OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                    if (result != null && result.isRetMsg()) {
+                        setPicToView(data);
+                    } else {
+                        dialog.dismiss();
+                        CommonUtils.showShortToast(R.string.toast_updatephoto_fail);
+                    }
+                } else {
+                    dialog.dismiss();
+                    CommonUtils.showShortToast(R.string.toast_updatephoto_fail);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                L.e(TAG, "error=" + error);
+                dialog.dismiss();
+                CommonUtils.showShortToast(R.string.toast_updatephoto_fail);
+            }
+        });
     }
 
     public void startPhotoZoom(Uri uri) {
@@ -264,7 +301,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     }
 
     private void uploadUserAvatar(final byte[] data) {
-        dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
         new Thread(new Runnable() {
 
             @Override
@@ -288,7 +324,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             }
         }).start();
 
-        dialog.show();
     }
 
 
@@ -342,6 +377,26 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             case R.id.rl_autograph:
                 break;
         }
+    }
+
+    public File saveBitmapFile(Intent picdata) {
+        Bundle extras = picdata.getExtras();
+        if (extras != null) {
+            Bitmap bitmap = extras.getParcelable("data");
+            String imagePath = EaseImageUtils.getImagePath(username + I.AVATAR_SUFFIX_JPG);
+            File file = new File(imagePath);
+            L.e(TAG, "file path=" + file.getAbsolutePath());
+            try {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                bos.flush();
+                bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return file;
+        }
+        return null;
     }
 
 
