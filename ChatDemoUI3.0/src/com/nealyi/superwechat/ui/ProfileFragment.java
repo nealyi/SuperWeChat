@@ -14,6 +14,7 @@ import com.easemob.redpacketui.utils.RedPacketUtil;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.nealyi.superwechat.Constant;
 import com.nealyi.superwechat.R;
+import com.nealyi.superwechat.utils.L;
 import com.nealyi.superwechat.utils.MFGT;
 
 import butterknife.BindView;
@@ -24,6 +25,7 @@ import butterknife.OnClick;
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends Fragment {
+    private static final String TAG = ProfileFragment.class.getSimpleName();
 
     @BindView(R.id.iv_avatar)
     ImageView mIvAvatar;

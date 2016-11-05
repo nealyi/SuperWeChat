@@ -2,6 +2,7 @@ package com.hyphenate.easeui.utils;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,10 +55,14 @@ public class EaseUserUtils {
      * @param username
      */
     public static void setUserAvatar(Context context, String username, ImageView imageView) {
-        EaseUser user = getUserInfo(username);
+//        EaseUser user = getUserInfo(username);
+        User user = getAppUserInfo(username);
+        Log.i("main","setUserAvatar,user="+user);
+        Log.i("main","setUserAvatar,userAvatar="+user.getAvatar());
         if (user != null && user.getAvatar() != null) {
             try {
                 int avatarResId = Integer.parseInt(user.getAvatar());
+                Log.i("main","setUserAvatar,avatarResId="+avatarResId);
                 Glide.with(context).load(avatarResId).into(imageView);
             } catch (Exception e) {
                 //use default avatar
