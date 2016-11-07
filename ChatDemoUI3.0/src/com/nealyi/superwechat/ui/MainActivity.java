@@ -31,6 +31,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,8 +48,11 @@ import com.nealyi.superwechat.SuperWeChatHelper;
 import com.nealyi.superwechat.adapter.MainTabAdpter;
 import com.nealyi.superwechat.db.InviteMessgeDao;
 import com.nealyi.superwechat.db.UserDao;
+import com.nealyi.superwechat.dialog.TitleMenu.ActionItem;
+import com.nealyi.superwechat.dialog.TitleMenu.TitlePopup;
 import com.nealyi.superwechat.runtimepermissions.PermissionsManager;
 import com.nealyi.superwechat.runtimepermissions.PermissionsResultAction;
+import com.nealyi.superwechat.utils.MFGT;
 import com.nealyi.superwechat.widget.DMTabHost;
 import com.nealyi.superwechat.widget.MFViewPager;
 import com.umeng.analytics.MobclickAgent;
@@ -56,6 +60,7 @@ import com.umeng.update.UmengUpdateAgent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 @SuppressLint("NewApi")
 public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
@@ -86,6 +91,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     DMTabHost mLayoutTabHost;
 
     MainTabAdpter mAdpter;
+    TitlePopup mTitlePopup;
 
 
     /**
@@ -196,7 +202,30 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         mLayoutTabHost.setChecked(0);
         mLayoutTabHost.setOnCheckedChangeListener(this);
         mLayoutViewPager.setOnPageChangeListener(this);
+        mTitlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_groupchat, R.drawable.icon_menu_group));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_addfriend, R.drawable.icon_menu_addfriend));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_qrcode, R.drawable.icon_menu_sao));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_money, R.drawable.icon_menu_money));
+        mTitlePopup.setItemOnClickListener(mOnItemOnClickListener);
     }
+
+    TitlePopup.OnItemOnClickListener mOnItemOnClickListener = new TitlePopup.OnItemOnClickListener() {
+        @Override
+        public void onItemClick(ActionItem item, int position) {
+            switch (position) {
+                case 0:
+                    break;
+                case 1:
+                    MFGT.gotoAddFriend(MainActivity.this);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+            }
+        }
+    };
 
     /**
      * on tab clicked
@@ -287,7 +316,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 
     @Override
     public void onCheckedChange(int checkedPosition, boolean byUser) {
-        mLayoutViewPager.setCurrentItem(checkedPosition,false);
+        mLayoutViewPager.setCurrentItem(checkedPosition, false);
     }
 
     @Override
@@ -304,6 +333,11 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @OnClick(R.id.iv_add)
+    public void showPop() {
+        mTitlePopup.show(findViewById(R.id.layout_title));
     }
 
 //	private void registerBroadcastReceiver() {

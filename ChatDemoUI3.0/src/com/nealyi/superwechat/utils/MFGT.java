@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.nealyi.superwechat.R;
+import com.nealyi.superwechat.ui.AddContactActivity;
 import com.nealyi.superwechat.ui.MainActivity;
 import com.nealyi.superwechat.ui.SettingsActivity;
 import com.nealyi.superwechat.ui.UserProfileActivity;
@@ -30,5 +31,9 @@ public class MFGT {
 
     public static void gotoUserProfile(Activity context){
         startActivity(context, UserProfileActivity.class);
+    }
+
+    public static void gotoAddFriend(Activity context){
+        startActivity(context, AddContactActivity.class);
     }
 }
