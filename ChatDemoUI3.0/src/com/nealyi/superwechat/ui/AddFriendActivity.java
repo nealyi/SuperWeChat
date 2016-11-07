@@ -1,8 +1,11 @@
 package com.nealyi.superwechat.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.text.Selection;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,8 +16,8 @@ import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.nealyi.superwechat.I;
 import com.nealyi.superwechat.R;
-import com.nealyi.superwechat.utils.L;
 import com.nealyi.superwechat.utils.MFGT;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +37,7 @@ public class AddFriendActivity extends BaseActivity {
 
     User user;
     private ProgressDialog progressDialog;
+    InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +60,29 @@ public class AddFriendActivity extends BaseActivity {
         String mUserNick = EaseUserUtils.getCurrentAppUserInfo().getMUserNick();
         String msg = getResources().getString(R.string.add_contact_send_message_prefix) + mUserNick;
         mEtApplyMessage.setText(msg);
+        Selection.setSelection(mEtApplyMessage.getText(), 2, msg.length());
+        mEtApplyMessage.requestFocus();
+//        InputMethodManager imm = (InputMethodManager) mEtApplyMessage.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mEtApplyMessage, InputMethodManager.RESULT_SHOWN);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+//        Timer timer = new Timer(); //设置定时器
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() { //弹出软键盘的代码
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.showSoftInput(mEtApplyMessage, InputMethodManager.RESULT_SHOWN);
+//                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+//            }
+//        }, 300); //设置300毫秒的时长
     }
 
     @OnClick({R.id.iv_back, R.id.tv_search})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
+                imm.hideSoftInputFromWindow(mEtApplyMessage.getWindowToken(), 0);
                 MFGT.finish(this);
                 break;
             case R.id.tv_search:
