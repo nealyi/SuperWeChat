@@ -55,8 +55,7 @@ public class EaseUserUtils {
      * @param username
      */
     public static void setUserAvatar(Context context, String username, ImageView imageView) {
-//        EaseUser user = getUserInfo(username);
-        User user = getAppUserInfo(username);
+        EaseUser user = getUserInfo(username);
         Log.i("main","setUserAvatar,user="+user);
         Log.i("main","setUserAvatar,userAvatar="+user.getAvatar());
         if (user != null && user.getAvatar() != null) {
@@ -94,6 +93,8 @@ public class EaseUserUtils {
      */
     public static void setAppUserAvatar(Context context, String username, ImageView imageView) {
         User user = getAppUserInfo(username);
+        Log.i("main","setAppUserAvatar,user="+user);
+        Log.i("main","setAppUserAvatar,userAvatar="+user.getAvatar());
         if (user != null && user.getAvatar() != null) {
             try {
                 int avatarResId = Integer.parseInt(user.getAvatar());
@@ -123,7 +124,7 @@ public class EaseUserUtils {
 
     public static void setCurrentUserAvatar(FragmentActivity activity, ImageView ivAvatar) {
         String username = EMClient.getInstance().getCurrentUser();
-        setUserAvatar(activity, username, ivAvatar);
+        setAppUserAvatar(activity, username, ivAvatar);
     }
 
     public static void setCurrentUserNick(TextView tvNick) {
