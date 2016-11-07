@@ -47,4 +47,18 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
 
+    <TextView
+        android:text="查找"
+        android:textSize="16dp"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:id="@+id/tv_search"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
 </RelativeLayout>
