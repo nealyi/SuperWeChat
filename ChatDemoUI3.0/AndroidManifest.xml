@@ -45,7 +45,6 @@
         android:protectionLevel="signatureOrSystem"/>
 
     <uses-permission android:name="com.nealyi.superwechat.permission.MIPUSH_RECEIVE"/>
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
@@ -498,6 +497,11 @@
             android:theme="@style/horizontal_slide"/>
         <activity
             android:name=".ui.FriendProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide">
+        </activity>
+        <activity
+            android:name=".ui.AddFriendActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide">
         </activity>

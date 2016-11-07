@@ -20,10 +20,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.nealyi.superwechat.R;
+import com.nealyi.superwechat.SuperWeChatHelper;
 import com.nealyi.superwechat.bean.Result;
 import com.nealyi.superwechat.utils.CommonUtils;
 import com.nealyi.superwechat.utils.L;
@@ -46,7 +49,6 @@ public class AddContactActivity extends BaseActivity {
     TextView mTvSearch;
     @BindView(R.id.et_username)
     EditText mEtUsername;
-    private TextView nameText;
     private String toAddUsername;
     private ProgressDialog progressDialog;
 
@@ -56,8 +58,6 @@ public class AddContactActivity extends BaseActivity {
         setContentView(R.layout.em_activity_add_contact);
         ButterKnife.bind(this);
         initView();
-
-        nameText = (TextView) findViewById(R.id.name);
     }
 
     private void initView() {
@@ -116,8 +116,54 @@ public class AddContactActivity extends BaseActivity {
                 progressDialog.dismiss();
             }
         });
+    }
+
+    /**
+     *  add contact
+     * @param view
+     */
+    public void addContact(View view) {
+        if (EMClient.getInstance().getCurrentUser().equals(mEtUsername.getText().toString())) {
+            new EaseAlertDialog(this, R.string.not_add_myself).show();
+            return;
+        }
+
+        if (SuperWeChatHelper.getInstance().getContactList().containsKey(mEtUsername.getText().toString())) {
+            //let the user know the contact already in your contact list
+            if (EMClient.getInstance().contactManager().getBlackListUsernames().contains(mEtUsername.getText().toString())) {
+                new EaseAlertDialog(this, R.string.user_already_in_contactlist).show();
+                return;
+            }
+            new EaseAlertDialog(this, R.string.This_user_is_already_your_friend).show();
+            return;
+        }
 
 
+        new Thread(new Runnable() {
+            public void run() {
+
+                try {
+                    //demo use a hardcode reason here, you need let user to input if you like
+                    String s = getResources().getString(R.string.Add_a_friend);
+                    EMClient.getInstance().contactManager().addContact(toAddUsername, s);
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            progressDialog.dismiss();
+                            String s1 = getResources().getString(R.string.send_successful);
+                            Toast.makeText(getApplicationContext(), s1, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (final Exception e) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            progressDialog.dismiss();
+                            String s2 = getResources().getString(R.string.Request_add_buddy_failure);
+                            Toast.makeText(getApplicationContext(), s2 + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
 

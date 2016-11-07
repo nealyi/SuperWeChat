@@ -152,4 +152,7 @@
     <string name="User_name_cannot_be_modify">user name cannot be modify</string>
     <string name="toast_nick_not_modify">nick not modify</string>
     <string name="detail_information">detail information</string>
+    <string name="apply_friend">apply friend</string>
+    <string name="send">send</string>
+    <string name="add_contact_send_message_prefix">Iam </string>
 </resources>

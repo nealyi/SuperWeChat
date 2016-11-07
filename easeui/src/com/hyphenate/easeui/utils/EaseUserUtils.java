@@ -50,6 +50,19 @@ public class EaseUserUtils {
     }
 
     /**
+     *
+     * @return User
+     */
+
+    public static User getCurrentAppUserInfo(){
+        String username = EMClient.getInstance().getCurrentUser();
+        if(userProvider != null)
+            return userProvider.getAppUser(username);
+
+        return null;
+    }
+
+    /**
      * set user avatar
      *
      * @param username

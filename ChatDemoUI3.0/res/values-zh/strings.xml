@@ -149,4 +149,7 @@
     <string name="User_name_cannot_be_modify">微信号不能修改</string>
     <string name="toast_nick_not_modify">昵称没有修改</string>
     <string name="detail_information">详细资料</string>
+    <string name="apply_friend">朋友验证</string>
+    <string name="send">发送</string>
+    <string name="add_contact_send_message_prefix">我是</string>
 </resources>

@@ -132,4 +132,46 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_send_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_bg_green"
+        android:text="发消息"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btn_video_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_bg_gray"
+        android:text="视频聊天"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btn_add_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_bg_green"
+        android:text="添加到通讯录"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:visibility="gone"/>
 </LinearLayout>
