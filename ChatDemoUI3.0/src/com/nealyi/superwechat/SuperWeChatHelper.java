@@ -29,6 +29,7 @@ import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.domain.User;
 import com.nealyi.superwechat.R;
+import com.nealyi.superwechat.bean.Result;
 import com.nealyi.superwechat.db.SuperWeChatDBManager;
 import com.nealyi.superwechat.db.InviteMessgeDao;
 import com.nealyi.superwechat.db.UserDao;
@@ -41,7 +42,10 @@ import com.nealyi.superwechat.ui.ChatActivity;
 import com.nealyi.superwechat.ui.MainActivity;
 import com.nealyi.superwechat.ui.VideoCallActivity;
 import com.nealyi.superwechat.ui.VoiceCallActivity;
+import com.nealyi.superwechat.utils.CommonUtils;
 import com.nealyi.superwechat.utils.L;
+import com.nealyi.superwechat.utils.NetDao;
+import com.nealyi.superwechat.utils.OkHttpUtils;
 import com.nealyi.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseEmojiconInfoProvider;
@@ -56,6 +60,7 @@ import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
+import com.nealyi.superwechat.utils.ResultUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -626,6 +631,27 @@ public class SuperWeChatHelper {
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
 
+            Map<String, User> localAppUsers = getAppContactList();
+            if (!localAppUsers.containsKey(username)) {
+                NetDao.addContact(appContext, EMClient.getInstance().getCurrentUser(), username, new OkHttpUtils.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if (s != null) {
+                            Result result = ResultUtils.getResultFromJson(s, User.class);
+                            if (result != null && result.isRetMsg()) {
+                                User user = (User) result.getRetData();
+                                saveAppContact(user);
+                                broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast("error=" + error);
+                    }
+                });
+            }
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
