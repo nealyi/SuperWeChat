@@ -36,11 +36,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.redpacketsdk.constant.RPConstant;
+import com.easemob.redpacketui.utils.RedPacketUtil;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMContactListener;
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMConversation.EMConversationType;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
 import com.nealyi.superwechat.Constant;
 import com.nealyi.superwechat.R;
@@ -58,6 +64,8 @@ import com.nealyi.superwechat.widget.MFViewPager;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -72,10 +80,10 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 //	private TextView unreadAddressLable;
 //
 //	private Button[] mTabs;
-//	private ContactListFragment contactListFragment;
-//	private Fragment[] fragments;
+    private ContactListFragment contactListFragment;
+    //	private Fragment[] fragments;
 //	private int index;
-//	private int currentTabIndex;
+    private int currentTabIndex;
     // user logged into another device
     public boolean isConflict = false;
     // user account was removed
@@ -132,6 +140,8 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         // runtime permission for android 6.0, just require all permissions here for simple
         requestPermissions();
 
+//        conversationListFragment = new ConversationListFragment();
+        contactListFragment = new ContactListFragment();
         initView();
 
         //umeng api
@@ -143,8 +153,6 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 
         inviteMessgeDao = new InviteMessgeDao(this);
         UserDao userDao = new UserDao(this);
-//		conversationListFragment = new ConversationListFragment();
-//		contactListFragment = new ContactListFragment();
 //		SettingsFragment settingFragment = new SettingsFragment();
 //		fragments = new Fragment[] { conversationListFragment, contactListFragment, settingFragment};
 //
@@ -195,7 +203,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         mLayoutViewPager.setOffscreenPageLimit(4);
         mAdpter.clear();
         mAdpter.addFragment(new ConversationListFragment(), getString(R.string.app_name));
-        mAdpter.addFragment(new ContactListFragment(), getString(R.string.contacts));
+        mAdpter.addFragment(contactListFragment, getString(R.string.contacts));
         mAdpter.addFragment(new DiscoverFragment(), getString(R.string.discover));
         mAdpter.addFragment(new ProfileFragment(), getString(R.string.me));
         mAdpter.notifyDataSetChanged();
@@ -233,82 +241,83 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      * @param view
      */
 //	public void onTabClicked(View view) {
-//		switch (view.getId()) {
-//		case R.id.btn_conversation:
-//			index = 0;
-//			break;
-//		case R.id.btn_address_list:
-//			index = 1;
-//			break;
-//		case R.id.btn_setting:
-//			index = 2;
-//			break;
-//		}
-//		if (currentTabIndex != index) {
-//			FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
-//			trx.hide(fragments[currentTabIndex]);
-//			if (!fragments[index].isAdded()) {
-//				trx.add(R.id.fragment_container, fragments[index]);
-//			}
-//			trx.show(fragments[index]).commit();
-//		}
-//		mTabs[currentTabIndex].setSelected(false);
-//		// set current tab selected
-//		mTabs[index].setSelected(true);
-//		currentTabIndex = index;
-//	}
+//        switch (view.getId()) {
+//            case R.id.btn_conversation:
+//                index = 0;
+//                break;
+//            case R.id.btn_address_list:
+//                index = 1;
+//                break;
+//            case R.id.btn_setting:
+//                index = 2;
+//                break;
+//        }
+//        if (currentTabIndex != index) {
+//            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+//            trx.hide(fragments[currentTabIndex]);
+//            if (!fragments[index].isAdded()) {
+//                trx.add(R.id.fragment_container, fragments[index]);
+//            }
+//            trx.show(fragments[index]).commit();
+//        }
+//        mTabs[currentTabIndex].setSelected(false);
+//        // set current tab selected
+//        mTabs[index].setSelected(true);
+//        currentTabIndex = index;
+//    }
 
-//	EMMessageListener messageListener = new EMMessageListener() {
-//
-//		@Override
-//		public void onMessageReceived(List<EMMessage> messages) {
-//			// notify new message
-//		    for (EMMessage message : messages) {
-//		        SuperWeChatHelper.getInstance().getNotifier().onNewMsg(message);
-//		    }
-//			refreshUIWithMessage();
-//		}
-//
-//		@Override
-//		public void onCmdMessageReceived(List<EMMessage> messages) {
-//			//red packet code : 处理红包回执透传消息
-//			for (EMMessage message : messages) {
-//				EMCmdMessageBody cmdMsgBody = (EMCmdMessageBody) message.getBody();
-//				final String action = cmdMsgBody.action();//获取自定义action
-//				if (action.equals(RPConstant.REFRESH_GROUP_RED_PACKET_ACTION)) {
-//					RedPacketUtil.receiveRedPacketAckMessage(message);
-//				}
-//			}
-//			//end of red packet code
-//			refreshUIWithMessage();
-//		}
-//
-//		@Override
-//		public void onMessageReadAckReceived(List<EMMessage> messages) {
-//		}
-//
-//		@Override
-//		public void onMessageDeliveryAckReceived(List<EMMessage> message) {
-//		}
-//
-//		@Override
-//		public void onMessageChanged(EMMessage message, Object change) {}
-//	};
+    EMMessageListener messageListener = new EMMessageListener() {
 
-//	private void refreshUIWithMessage() {
-//		runOnUiThread(new Runnable() {
-//			public void run() {
-//				// refresh unread count
-//				updateUnreadLabel();
-//				if (currentTabIndex == 0) {
-//					// refresh conversation list
-//					if (conversationListFragment != null) {
-//						conversationListFragment.refresh();
-//					}
-//				}
-//			}
-//		});
-//	}
+        @Override
+        public void onMessageReceived(List<EMMessage> messages) {
+            // notify new message
+            for (EMMessage message : messages) {
+                SuperWeChatHelper.getInstance().getNotifier().onNewMsg(message);
+            }
+            refreshUIWithMessage();
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> messages) {
+            //red packet code : 处理红包回执透传消息
+            for (EMMessage message : messages) {
+                EMCmdMessageBody cmdMsgBody = (EMCmdMessageBody) message.getBody();
+                final String action = cmdMsgBody.action();//获取自定义action
+                if (action.equals(RPConstant.REFRESH_GROUP_RED_PACKET_ACTION)) {
+                    RedPacketUtil.receiveRedPacketAckMessage(message);
+                }
+            }
+            //end of red packet code
+            refreshUIWithMessage();
+        }
+
+        @Override
+        public void onMessageReadAckReceived(List<EMMessage> messages) {
+        }
+
+        @Override
+        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
+        }
+
+        @Override
+        public void onMessageChanged(EMMessage message, Object change) {
+        }
+    };
+    private void refreshUIWithMessage() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                // refresh unread count
+                updateUnreadLabel();
+                if (currentTabIndex == 0) {
+                    // refresh conversation list
+                    if (conversationListFragment != null) {
+                        conversationListFragment.refresh();
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     public void back(View view) {
         super.back(view);
@@ -317,6 +326,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     @Override
     public void onCheckedChange(int checkedPosition, boolean byUser) {
         mLayoutViewPager.setCurrentItem(checkedPosition, false);
+        currentTabIndex = checkedPosition;
     }
 
     @Override
@@ -328,6 +338,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     public void onPageSelected(int position) {
         mLayoutViewPager.setCurrentItem(position);
         mLayoutTabHost.setChecked(position);
+        currentTabIndex = position;
     }
 
     @Override
@@ -340,45 +351,46 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         mTitlePopup.show(findViewById(R.id.layout_title));
     }
 
-//	private void registerBroadcastReceiver() {
-//        broadcastManager = LocalBroadcastManager.getInstance(this);
-//        IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction(Constant.ACTION_CONTACT_CHANAGED);
-//        intentFilter.addAction(Constant.ACTION_GROUP_CHANAGED);
-//		intentFilter.addAction(RPConstant.REFRESH_GROUP_RED_PACKET_ACTION);
-//        broadcastReceiver = new BroadcastReceiver() {
-//
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                updateUnreadLabel();
-//                updateUnreadAddressLable();
+    private void registerBroadcastReceiver() {
+        broadcastManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constant.ACTION_CONTACT_CHANAGED);
+        intentFilter.addAction(Constant.ACTION_GROUP_CHANAGED);
+        intentFilter.addAction(RPConstant.REFRESH_GROUP_RED_PACKET_ACTION);
+        broadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateUnreadLabel();
+                updateUnreadAddressLable();
 //                if (currentTabIndex == 0) {
 //                    // refresh conversation list
 //                    if (conversationListFragment != null) {
 //                        conversationListFragment.refresh();
 //                    }
-//                } else if (currentTabIndex == 1) {
-//                    if(contactListFragment != null) {
-//                        contactListFragment.refresh();
-//                    }
-//                }
-//                String action = intent.getAction();
-//                if(action.equals(Constant.ACTION_GROUP_CHANAGED)){
-//                    if (EaseCommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
-//                        GroupsActivity.instance.onResume();
-//                    }
-//                }
-//				//red packet code : 处理红包回执透传消息
-//				if (action.equals(RPConstant.REFRESH_GROUP_RED_PACKET_ACTION)){
-//					if (conversationListFragment != null){
-//						conversationListFragment.refresh();
-//					}
-//				}
-//				//end of red packet code
-//			}
-//        };
-//        broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
-//    }
+//                } else
+                if (currentTabIndex == 1) {
+                    if (contactListFragment != null) {
+                        contactListFragment.refresh();
+                    }
+                }
+                String action = intent.getAction();
+                if (action.equals(Constant.ACTION_GROUP_CHANAGED)) {
+                    if (EaseCommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
+                        GroupsActivity.instance.onResume();
+                    }
+                }
+                //red packet code : 处理红包回执透传消息
+                if (action.equals(RPConstant.REFRESH_GROUP_RED_PACKET_ACTION)) {
+                    if (conversationListFragment != null) {
+                        conversationListFragment.refresh();
+                    }
+                }
+                //end of red packet code
+            }
+        };
+        broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
+    }
 
     public class MyContactListener implements EMContactListener {
         @Override
@@ -455,11 +467,13 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         runOnUiThread(new Runnable() {
             public void run() {
                 int count = getUnreadAddressCountTotal();
-//				if (count > 0) {
+                if (count > 0) {
 //					unreadAddressLable.setVisibility(View.VISIBLE);
-//				} else {
+                    mLayoutTabHost.setHasNew(1, true);
+                } else {
 //					unreadAddressLable.setVisibility(View.INVISIBLE);
-//				}
+                    mLayoutTabHost.setHasNew(1, false);
+                }
             }
         });
 
