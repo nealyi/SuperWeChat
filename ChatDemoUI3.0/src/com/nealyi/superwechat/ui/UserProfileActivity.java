@@ -334,7 +334,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
     public byte[] Bitmap2Bytes(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();
     }
 
@@ -393,7 +394,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             L.e(TAG, "file path=" + file.getAbsolutePath());
             try {
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
                 bos.flush();
                 bos.close();
             } catch (IOException e) {
