@@ -86,6 +86,7 @@ public class AddFriendActivity extends BaseActivity {
                 MFGT.finish(this);
                 break;
             case R.id.tv_search:
+                imm.hideSoftInputFromWindow(mEtApplyMessage.getWindowToken(), 0);
                 sendMsg();
                 break;
         }
