@@ -8,6 +8,7 @@ import com.nealyi.superwechat.I;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.ui.AddContactActivity;
 import com.nealyi.superwechat.ui.AddFriendActivity;
+import com.nealyi.superwechat.ui.ChatActivity;
 import com.nealyi.superwechat.ui.FriendProfileActivity;
 import com.nealyi.superwechat.ui.MainActivity;
 import com.nealyi.superwechat.ui.SettingsActivity;
@@ -52,13 +53,20 @@ public class MFGT {
         Intent intent = new Intent();
         intent.setClass(context, FriendProfileActivity.class);
         intent.putExtra(I.User.USER_NAME, user);
-        startActivity(context,intent);
+        startActivity(context, intent);
     }
 
     public static void gotoAddFriendMsg(Activity context, User user) {
         Intent intent = new Intent();
         intent.setClass(context, AddFriendActivity.class);
         intent.putExtra(I.User.USER_NAME, user);
-        startActivity(context,intent);
+        startActivity(context, intent);
+    }
+
+    public static void gotoChat(Activity context, String username) {
+        Intent intent = new Intent();
+        intent.setClass(context, ChatActivity.class);
+        intent.putExtra("userId", username);
+        startActivity(context, intent);
     }
 }

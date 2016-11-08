@@ -81,11 +81,12 @@ public class FriendProfileActivity extends BaseActivity {
                 MFGT.finish(this);
                 break;
             case R.id.btn_send_message:
+                MFGT.gotoChat(this, user.getMUserName());
                 break;
             case R.id.btn_video_chat:
                 break;
             case R.id.btn_add_friend:
-                MFGT.gotoAddFriendMsg(FriendProfileActivity.this,user);
+                MFGT.gotoAddFriendMsg(FriendProfileActivity.this, user);
                 break;
         }
     }

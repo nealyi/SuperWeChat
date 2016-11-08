@@ -17,10 +17,18 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.User;
 import com.nealyi.superwechat.SuperWeChatHelper;
 import com.nealyi.superwechat.R;
+import com.nealyi.superwechat.bean.Result;
 import com.nealyi.superwechat.db.InviteMessgeDao;
 import com.nealyi.superwechat.db.UserDao;
+import com.nealyi.superwechat.utils.CommonUtils;
+import com.nealyi.superwechat.utils.L;
+import com.nealyi.superwechat.utils.MFGT;
+import com.nealyi.superwechat.utils.NetDao;
+import com.nealyi.superwechat.utils.OkHttpUtils;
+import com.nealyi.superwechat.utils.ResultUtils;
 import com.nealyi.superwechat.widget.ContactItemView;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.ui.EaseContactListFragment;
@@ -109,7 +117,7 @@ public class ContactListFragment extends EaseContactListFragment {
         //设置联系人数据
         Map<String, EaseUser> m = SuperWeChatHelper.getInstance().getContactList();
         if (m instanceof Hashtable<?, ?>) {
-            m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
+            m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>) m).clone();
         }
         setContactsMap(m);
         super.setUpView();
@@ -117,14 +125,43 @@ public class ContactListFragment extends EaseContactListFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EaseUser user = (EaseUser)listView.getItemAtPosition(position);
+                EaseUser user = (EaseUser) listView.getItemAtPosition(position);
                 if (user != null) {
                     String username = user.getUsername();
                     // demo中直接进入聊天页面，实际一般是进入用户详情页
-                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
+                    User u = SuperWeChatHelper.getInstance().getAppContactList().get(username);
+                    if (u != null) {
+                        MFGT.gotoFriendProfile(getActivity(), SuperWeChatHelper.getInstance().getAppContactList().get(username));
+                    } else {
+                        NetDao.searchUser(getActivity(), username, new OkHttpUtils.OnCompleteListener<String>() {
+                            @Override
+                            public void onSuccess(String s) {
+                                if (s != null) {
+                                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                                    if (result != null && result.isRetMsg()) {
+                                        User u = (User) result.getRetData();
+                                        SuperWeChatHelper.getInstance().saveAppContact(u);
+                                        MFGT.gotoFriendProfile(getActivity(), u);
+                                    } else {
+                                        CommonUtils.showShortToast(getResources().getString(R.string.failed_to_load_data));
+                                    }
+                                } else {
+                                    CommonUtils.showShortToast(getResources().getString(R.string.failed_to_load_data));
+                                }
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                L.e(TAG, "error=" + error);
+                                CommonUtils.showShortToast("error=" + error);
+                            }
+                        });
+                    }
+//                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
                 }
             }
         });
+
 
         
         // 进入添加好友页
