@@ -280,6 +280,17 @@ public class ContactListFragment extends EaseContactListFragment {
 		pd.setMessage(st1);
 		pd.setCanceledOnTouchOutside(false);
 		pd.show();
+        NetDao.deleteContact(getActivity(), SuperWeChatHelper.getInstance().getCurrentUsernName(), tobeDeleteUser.getUsername(), new OkHttpUtils.OnCompleteListener<Result>() {
+            @Override
+            public void onSuccess(Result result) {
+                SuperWeChatHelper.getInstance().deleteContact(tobeDeleteUser.getUsername());
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
 		new Thread(new Runnable() {
 			public void run() {
 				try {
