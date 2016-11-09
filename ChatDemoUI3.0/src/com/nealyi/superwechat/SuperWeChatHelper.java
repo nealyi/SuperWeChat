@@ -1355,4 +1355,12 @@ public class SuperWeChatHelper {
         }
         return user;
     }
+
+    /**
+     * delete single contact
+     */
+    public void deleteContact(String username) {
+        appContactList.remove(username);
+        demoModel.deleteAppContact(username);
+    }
 }

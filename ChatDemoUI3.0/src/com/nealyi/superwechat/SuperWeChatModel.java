@@ -316,4 +316,9 @@ public class SuperWeChatModel {
         dao.saveAppContactList(contactList);
         return true;
     }
+
+    public void deleteAppContact(String username){
+        UserDao dao = new UserDao(context);
+        dao.deleteAppContact(username);
+    }
 }
