@@ -49,6 +49,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
 import com.nealyi.superwechat.Constant;
+import com.nealyi.superwechat.I;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.SuperWeChatHelper;
 import com.nealyi.superwechat.adapter.MainTabAdpter;
@@ -619,6 +620,10 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         showExceptionDialogFromIntent(intent);
+
+        if (intent.getBooleanExtra(I.ACTION_BACK_CONVERSATION, false)) {
+            mLayoutTabHost.setChecked(0);
+        }
     }
 
     /**
