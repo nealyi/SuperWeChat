@@ -45,6 +45,10 @@ import com.nealyi.superwechat.utils.MFGT;
 import com.nealyi.superwechat.utils.NetDao;
 import com.nealyi.superwechat.utils.OkHttpUtils;
 import com.nealyi.superwechat.utils.ResultUtils;
+import com.nealyi.superwechat.video.util.Utils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -247,6 +251,36 @@ public class LoginActivity extends BaseActivity {
         }
         // get user's info (this should be get from App's server or 3rd party service)
         SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                NetDao.downloadContactAllLis(mContext, currentUsername, new OkHttpUtils.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        L.e(TAG, "String = " + s);
+                        if (s != null) {
+                            Result result = ResultUtils.getListResultFromJson(s, User.class);
+                            L.e(TAG, "result = " + result);
+                            if (result != null && result.isRetMsg()) {
+                                ArrayList<User> users = (ArrayList<User>) result.getRetData();
+                                for (User user:users) {
+                                    L.e(TAG, "user = " + user);
+                                }
+                                UserDao dao = new UserDao(mContext);
+                                dao.saveAppContactListFirst(users);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
+            }
+        }.start();
 
         Intent intent = new Intent(LoginActivity.this,
                 MainActivity.class);

@@ -133,29 +133,29 @@ public class ContactListFragment extends EaseContactListFragment {
                     if (u != null) {
                         MFGT.gotoFriendProfile(getActivity(), SuperWeChatHelper.getInstance().getAppContactList().get(username));
                     } else {
-                        NetDao.searchUser(getActivity(), username, new OkHttpUtils.OnCompleteListener<String>() {
-                            @Override
-                            public void onSuccess(String s) {
-                                if (s != null) {
-                                    Result result = ResultUtils.getResultFromJson(s, User.class);
-                                    if (result != null && result.isRetMsg()) {
-                                        User u = (User) result.getRetData();
-                                        SuperWeChatHelper.getInstance().saveAppContact(u);
-                                        MFGT.gotoFriendProfile(getActivity(), u);
-                                    } else {
-                                        CommonUtils.showShortToast(getResources().getString(R.string.failed_to_load_data));
-                                    }
-                                } else {
-                                    CommonUtils.showShortToast(getResources().getString(R.string.failed_to_load_data));
-                                }
-                            }
-
-                            @Override
-                            public void onError(String error) {
-                                L.e(TAG, "error=" + error);
-                                CommonUtils.showShortToast("error=" + error);
-                            }
-                        });
+//                        NetDao.searchUser(getActivity(), username, new OkHttpUtils.OnCompleteListener<String>() {
+//                            @Override
+//                            public void onSuccess(String s) {
+//                                if (s != null) {
+//                                    Result result = ResultUtils.getResultFromJson(s, User.class);
+//                                    if (result != null && result.isRetMsg()) {
+//                                        User u = (User) result.getRetData();
+//                                        SuperWeChatHelper.getInstance().saveAppContact(u);
+//                                        MFGT.gotoFriendProfile(getActivity(), u);
+//                                    } else {
+//                                        CommonUtils.showShortToast(getResources().getString(R.string.failed_to_load_data));
+//                                    }
+//                                } else {
+//                                    CommonUtils.showShortToast(getResources().getString(R.string.failed_to_load_data));
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onError(String error) {
+//                                L.e(TAG, "error=" + error);
+//                                CommonUtils.showShortToast("error=" + error);
+//                            }
+//                        });
                     }
 //                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
                 }
