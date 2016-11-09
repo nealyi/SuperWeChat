@@ -30,7 +30,21 @@
                 app:tabtext="@string/app_name"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent">
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/unread_msg_number"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/tip_round_red_bg_shape"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="2dp"
+                    android:text="0"
+                    android:textSize="10dp"
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"/>
+            </com.nealyi.superwechat.widget.DMTabButton>
             <com.nealyi.superwechat.widget.DMTabButton
                 app:drawableTop="@drawable/tab_contact_list"
                 app:tabtext="@string/contacts"
