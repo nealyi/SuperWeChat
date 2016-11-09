@@ -76,12 +76,18 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 
     protected static final String TAG = "MainActivity";
     //	// textview for unread message count
-//	private TextView unreadLabel;
-//	// textview for unread event message
+//    private TextView unreadLabel;
+    //	// textview for unread event message
 //	private TextView unreadAddressLable;
 //
 //	private Button[] mTabs;
     private ContactListFragment contactListFragment;
+    private AlertDialog.Builder exceptionBuilder;
+    private boolean isExceptionDialogShow = false;
+    private BroadcastReceiver internalDebugReceiver;
+    private ConversationListFragment conversationListFragment;
+    private BroadcastReceiver broadcastReceiver;
+    private LocalBroadcastManager broadcastManager;
     //	private Fragment[] fragments;
 //	private int index;
     private int currentTabIndex;
@@ -141,7 +147,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         // runtime permission for android 6.0, just require all permissions here for simple
         requestPermissions();
 
-//        conversationListFragment = new ConversationListFragment();
+        conversationListFragment = new ConversationListFragment();
         contactListFragment = new ContactListFragment();
         initView();
 
@@ -162,7 +168,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 //				.commit();
 
         //register broadcast receiver to receive the change of group from DemoHelper
-//		registerBroadcastReceiver();
+		registerBroadcastReceiver();
 
 
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
@@ -189,7 +195,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      * init views
      */
     private void initView() {
-//		unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
+//        unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
 //		unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
 //		mTabs = new Button[3];
 //		mTabs[0] = (Button) findViewById(R.id.btn_conversation);
@@ -203,7 +209,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         mLayoutViewPager.setAdapter(mAdpter);
         mLayoutViewPager.setOffscreenPageLimit(4);
         mAdpter.clear();
-        mAdpter.addFragment(new ConversationListFragment(), getString(R.string.app_name));
+        mAdpter.addFragment(conversationListFragment, getString(R.string.app_name));
         mAdpter.addFragment(contactListFragment, getString(R.string.contacts));
         mAdpter.addFragment(new DiscoverFragment(), getString(R.string.discover));
         mAdpter.addFragment(new ProfileFragment(), getString(R.string.me));
@@ -304,17 +310,18 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         public void onMessageChanged(EMMessage message, Object change) {
         }
     };
+
     private void refreshUIWithMessage() {
         runOnUiThread(new Runnable() {
             public void run() {
                 // refresh unread count
                 updateUnreadLabel();
-                if (currentTabIndex == 0) {
-                    // refresh conversation list
-                    if (conversationListFragment != null) {
-                        conversationListFragment.refresh();
-                    }
+//                if (currentTabIndex == 0) {
+                // refresh conversation list
+                if (conversationListFragment != null) {
+                    conversationListFragment.refresh();
                 }
+//                }
             }
         });
     }
@@ -366,15 +373,15 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
                 updateUnreadAddressLable();
 //                if (currentTabIndex == 0) {
 //                    // refresh conversation list
-//                    if (conversationListFragment != null) {
-//                        conversationListFragment.refresh();
-//                    }
-//                } else
-                if (currentTabIndex == 1) {
-                    if (contactListFragment != null) {
-                        contactListFragment.refresh();
-                    }
+                if (conversationListFragment != null) {
+                    conversationListFragment.refresh();
                 }
+//                } else
+//                if (currentTabIndex == 1) {
+                if (contactListFragment != null) {
+                    contactListFragment.refresh();
+                }
+//                }
                 String action = intent.getAction();
                 if (action.equals(Constant.ACTION_GROUP_CHANAGED)) {
                     if (EaseCommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
@@ -439,7 +446,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
             exceptionBuilder = null;
             isExceptionDialogShow = false;
         }
-//        unregisterBroadcastReceiver();
+        unregisterBroadcastReceiver();
 
         try {
             unregisterReceiver(internalDebugReceiver);
@@ -452,13 +459,13 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      * update unread message count
      */
     public void updateUnreadLabel() {
-//		int count = getUnreadMsgCountTotal();
-//		if (count > 0) {
-//			unreadLabel.setText(String.valueOf(count));
-//			unreadLabel.setVisibility(View.VISIBLE);
-//		} else {
-//			unreadLabel.setVisibility(View.INVISIBLE);
-//		}
+        int count = getUnreadMsgCountTotal();
+//        if (count > 0) {
+//            unreadLabel.setText(String.valueOf(count));
+//            unreadLabel.setVisibility(View.VISIBLE);
+//        } else {
+//            unreadLabel.setVisibility(View.INVISIBLE);
+//        }
     }
 
     /**
@@ -551,12 +558,6 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         return super.onKeyDown(keyCode, event);
     }
 
-    private AlertDialog.Builder exceptionBuilder;
-    private boolean isExceptionDialogShow = false;
-    private BroadcastReceiver internalDebugReceiver;
-    private ConversationListFragment conversationListFragment;
-    private BroadcastReceiver broadcastReceiver;
-    private LocalBroadcastManager broadcastManager;
 
     private int getExceptionMessageId(String exceptionType) {
         if (exceptionType.equals(Constant.ACCOUNT_CONFLICT)) {
