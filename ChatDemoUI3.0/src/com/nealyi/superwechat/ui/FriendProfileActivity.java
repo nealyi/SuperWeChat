@@ -60,7 +60,8 @@ public class FriendProfileActivity extends BaseActivity {
     }
 
     private void isFriend() {
-        if (SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName())) {
+//        if (SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName())) {
+        if (SuperWeChatHelper.getInstance().getContactList().containsKey(user.getMUserName())) {
             mBtnSendMessage.setVisibility(View.VISIBLE);
             mBtnVideoChat.setVisibility(View.VISIBLE);
         } else {
