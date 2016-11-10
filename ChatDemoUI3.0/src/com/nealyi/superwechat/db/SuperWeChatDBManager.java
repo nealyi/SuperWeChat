@@ -515,34 +515,6 @@ public class SuperWeChatDBManager {
     }
 
     /**
-     * save contact list
-     *
-     * @param contactList
-     */
-    synchronized public void saveAppContactListFirst(List<User> contactList) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        if (db.isOpen()) {
-            for (User user : contactList) {
-                ContentValues values = new ContentValues();
-                values.put(UserDao.USER_COLUMN_NAME, user.getMUserName());
-                if (user.getMUserNick() != null)
-                    values.put(UserDao.USER_COLUMN_NICK, user.getMUserNick());
-                if (user.getMAvatarId() != null)
-                    values.put(UserDao.USER_COLUMN_AVATAR_ID, user.getMAvatarId());
-                if (user.getMAvatarType() != null)
-                    values.put(UserDao.USER_COLUMN_AVATAR_TYPE, user.getMAvatarType());
-                if (user.getMAvatarPath() != null)
-                    values.put(UserDao.USER_COLUMN_AVATAR_PATH, user.getMAvatarPath());
-                if (user.getMAvatarSuffix() != null)
-                    values.put(UserDao.USER_COLUMN_AVATAR_SUFFIX, user.getMAvatarSuffix());
-                if (user.getMAvatarLastUpdateTime() != null)
-                    values.put(UserDao.USER_COLUMN_AVATAR_LASTUPDATE_TIME, user.getMAvatarLastUpdateTime());
-                db.replace(UserDao.USER_TABLE_NAME, null, values);
-            }
-        }
-    }
-
-    /**
      * delete a contact
      *
      * @param username

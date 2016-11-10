@@ -214,9 +214,9 @@ public class LoginActivity extends BaseActivity {
                         User user = (User) result.getRetData();
                         L.e(TAG, "user=" + user);
                         if (user != null) {
-                            UserDao dao = new UserDao(mContext);
-                            dao.saveUser(user);
-                            loginSuccess();
+//                            UserDao dao = new UserDao(mContext);
+//                            dao.saveUser(user);
+                            loginSuccess(user);
                         } else {
                             pd.dismiss();
                             L.e(TAG, "login fail," + result);
@@ -234,7 +234,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void loginSuccess() {
+    private void loginSuccess(final User user) {
         // ** manually load all local groups and conversation
         EMClient.getInstance().groupManager().loadAllGroups();
         EMClient.getInstance().chatManager().loadAllConversations();
@@ -249,8 +249,6 @@ public class LoginActivity extends BaseActivity {
         if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
             pd.dismiss();
         }
-        // get user's info (this should be get from App's server or 3rd party service)
-        SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
 
         new Thread() {
             @Override
@@ -269,7 +267,8 @@ public class LoginActivity extends BaseActivity {
                                     L.e(TAG, "user = " + user);
                                 }
                                 UserDao dao = new UserDao(mContext);
-                                dao.saveAppContactListFirst(users);
+                                dao.saveAppContactList(users);
+                                dao.saveUser(user);
                             }
                         }
                     }
@@ -281,6 +280,9 @@ public class LoginActivity extends BaseActivity {
                 });
             }
         }.start();
+
+        // get user's info (this should be get from App's server or 3rd party service)
+        SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
 
         Intent intent = new Intent(LoginActivity.this,
                 MainActivity.class);
