@@ -214,9 +214,9 @@ public class LoginActivity extends BaseActivity {
                         User user = (User) result.getRetData();
                         L.e(TAG, "user=" + user);
                         if (user != null) {
-//                            UserDao dao = new UserDao(mContext);
-//                            dao.saveUser(user);
-                            loginSuccess(user);
+                            UserDao dao = new UserDao(mContext);
+                            dao.saveUser(user);
+                            loginSuccess();
                         } else {
                             pd.dismiss();
                             L.e(TAG, "login fail," + result);
@@ -234,7 +234,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void loginSuccess(final User user) {
+    private void loginSuccess() {
         // ** manually load all local groups and conversation
         EMClient.getInstance().groupManager().loadAllGroups();
         EMClient.getInstance().chatManager().loadAllConversations();
@@ -249,37 +249,6 @@ public class LoginActivity extends BaseActivity {
         if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
             pd.dismiss();
         }
-
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                NetDao.downloadContactAllLis(mContext, currentUsername, new OkHttpUtils.OnCompleteListener<String>() {
-                    @Override
-                    public void onSuccess(String s) {
-                        L.e(TAG, "String = " + s);
-                        if (s != null) {
-                            Result result = ResultUtils.getListResultFromJson(s, User.class);
-                            L.e(TAG, "result = " + result);
-                            if (result != null && result.isRetMsg()) {
-                                ArrayList<User> users = (ArrayList<User>) result.getRetData();
-                                for (User user:users) {
-                                    L.e(TAG, "user = " + user);
-                                }
-                                UserDao dao = new UserDao(mContext);
-                                dao.saveAppContactList(users);
-                                dao.saveUser(user);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-
-                    }
-                });
-            }
-        }.start();
 
         // get user's info (this should be get from App's server or 3rd party service)
         SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
