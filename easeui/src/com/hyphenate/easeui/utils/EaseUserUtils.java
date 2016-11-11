@@ -13,9 +13,11 @@ import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.controller.EaseUI;
 import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.domain.User;
 
 public class EaseUserUtils {
+    private static final String TAG = EaseUserUtils.class.getSimpleName();
 
     static EaseUserProfileProvider userProvider;
 
@@ -105,8 +107,8 @@ public class EaseUserUtils {
      */
     public static void setAppUserAvatar(Context context, String username, ImageView imageView) {
         User user = getAppUserInfo(username);
-        Log.i("main", "setAppUserAvatar,user=" + user);
-        Log.i("main", "setAppUserAvatar,userAvatar=" + user.getAvatar());
+        Log.e(TAG, "setAppUserAvatar,user=" + user);
+        Log.e(TAG, "setAppUserAvatar,userAvatar=" + user.getAvatar());
         if (user != null && user.getAvatar() != null) {
             try {
                 int avatarResId = Integer.parseInt(user.getAvatar());
@@ -117,6 +119,26 @@ public class EaseUserUtils {
             }
         } else {
             Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
+        }
+    }
+
+    /**
+     * set group avatar
+     *
+     * @param hxid
+     */
+    public static void setAppGroupAvatar(Context context, String hxid, ImageView imageView) {
+        Log.e(TAG, "setAppGroupAvatar,hxid=" + hxid);
+        if (hxid != null) {
+            try {
+                int avatarResId = Integer.parseInt(Group.getAvatar(hxid));
+                Glide.with(context).load(avatarResId).into(imageView);
+            } catch (Exception e) {
+                //use default avatar
+                Glide.with(context).load(Group.getAvatar(hxid)).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ease_group_icon).into(imageView);
+            }
+        } else {
+            Glide.with(context).load(R.drawable.ease_group_icon).into(imageView);
         }
     }
 
