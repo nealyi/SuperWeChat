@@ -14,8 +14,12 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.nealyi.superwechat.I;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.SuperWeChatHelper;
+import com.nealyi.superwechat.bean.Result;
 import com.nealyi.superwechat.utils.L;
 import com.nealyi.superwechat.utils.MFGT;
+import com.nealyi.superwechat.utils.NetDao;
+import com.nealyi.superwechat.utils.OkHttpUtils;
+import com.nealyi.superwechat.utils.ResultUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +40,6 @@ public class FriendProfileActivity extends BaseActivity {
     @BindView(R.id.tv_username)
     TextView mTvUsername;
 
-    User user;
     @BindView(R.id.btn_send_message)
     Button mBtnSendMessage;
     @BindView(R.id.btn_video_chat)
@@ -44,33 +47,66 @@ public class FriendProfileActivity extends BaseActivity {
     @BindView(R.id.btn_add_friend)
     Button mBtnAddFriend;
 
+    User user = null;
+    String username = null;
+    boolean isFriend;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        L.e(TAG,"onCreate...");
+        L.e(TAG, "onCreate...");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
         ButterKnife.bind(this);
-        user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
-        L.e(TAG,"onCreate,user="+user);
-        if (user == null) {
+        username = getIntent().getStringExtra(I.User.USER_NAME);
+        L.e(TAG, "onCreate,username=" + username);
+        if (username == null) {
             MFGT.finish(this);
             return;
         }
         initView();
+        user = SuperWeChatHelper.getInstance().getAppContactList().get(username);
+        if (user == null) {
+            isFriend = false;
+            searchUser();
+        } else {
+            isFriend = true;
+        }
+        searchUser();
+        isFriend();
+    }
+
+    private void searchUser() {
+        NetDao.searchUser(this, username, new OkHttpUtils.OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                    if (result != null && result.isRetMsg()) {
+                        user = (User) result.getRetData();
+                        if (user != null) {
+                            setUserInfo();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
     private void initView() {
-        L.e(TAG,"initView,user="+user);
+        L.e(TAG, "initView,username=" + username);
         mIvBack.setVisibility(View.VISIBLE);
         mTvCommonTitle.setVisibility(View.VISIBLE);
         mTvCommonTitle.setText(getResources().getString(R.string.detail_information));
-        setUserInfo();
-        isFriend();
     }
 
     private void isFriend() {
 //        if (SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName())) {
-        if (SuperWeChatHelper.getInstance().getContactList().containsKey(user.getMUserName())) {
+        if (isFriend) {
             mBtnSendMessage.setVisibility(View.VISIBLE);
             mBtnVideoChat.setVisibility(View.VISIBLE);
         } else {
@@ -79,8 +115,8 @@ public class FriendProfileActivity extends BaseActivity {
     }
 
     private void setUserInfo() {
-        L.e(TAG,"user = "+user);
-        L.e(TAG,"username = "+user.getMUserName());
+        L.e(TAG, "user = " + user);
+        L.e(TAG, "username = " + user.getMUserName());
         EaseUserUtils.setAppUserAvatar(this, user.getMUserName(), mIvAvatar);
         mTvNick.setText(user.getMUserNick());
         mTvUsername.setText(user.getMUserName());
@@ -99,8 +135,8 @@ public class FriendProfileActivity extends BaseActivity {
                 if (!EMClient.getInstance().isConnected()) {
                     Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
                 } else {
-                    startActivity(new Intent(this,VideoCallActivity.class).putExtra("username",user.getMUserName())
-                            .putExtra("isComingCall",false));
+                    startActivity(new Intent(this, VideoCallActivity.class).putExtra("username", user.getMUserName())
+                            .putExtra("isComingCall", false));
                 }
                 break;
             case R.id.btn_add_friend:
