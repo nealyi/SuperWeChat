@@ -69,7 +69,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	private ProgressDialog progressDialog;
 
 	public static GroupDetailsActivity instance;
-	
+
 	String st = "";
 
 	private EaseSwitchButton switchButton;
@@ -77,7 +77,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    
+
         groupId = getIntent().getStringExtra("groupId");
         group = EMClient.getInstance().groupManager().getGroup(groupId);
 
@@ -86,7 +86,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             finish();
             return;
         }
-        
+
 		setContentView(R.layout.em_activity_group_details);
 		instance = this;
 		st = getResources().getString(R.string.people);
@@ -122,12 +122,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 		GroupChangeListener groupChangeListener = new GroupChangeListener();
 		EMClient.getInstance().groupManager().addGroupChangeListener(groupChangeListener);
-		
+
 		((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getAffiliationsCount() + st);
-		
+
 		List<String> members = new ArrayList<String>();
 		members.addAll(group.getMembers());
-		
+
 		adapter = new GridAdapter(this, R.layout.em_grid, members);
 		userGridview.setAdapter(adapter);
 
@@ -171,7 +171,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		String st5 = getResources().getString(R.string.is_modify_the_group_name);
 		final String st6 = getResources().getString(R.string.Modify_the_group_name_successful);
 		final String st7 = getResources().getString(R.string.change_the_group_name_failed_please);
-		
+
 		if (resultCode == RESULT_OK) {
 			if (progressDialog == null) {
 				progressDialog = new ProgressDialog(GroupDetailsActivity.this);
@@ -201,7 +201,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				if(!TextUtils.isEmpty(returnData)){
 					progressDialog.setMessage(st5);
 					progressDialog.show();
-					
+
 					new Thread(new Runnable() {
 						public void run() {
 							try {
@@ -214,7 +214,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 										Toast.makeText(getApplicationContext(), st6, Toast.LENGTH_SHORT).show();
 									}
 								});
-								
+
 							} catch (HyphenateException e) {
 								e.printStackTrace();
 								runOnUiThread(new Runnable() {
@@ -267,13 +267,13 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         List<String> members = new ArrayList<String>();
         members.addAll(group.getMembers());
         adapter.addAll(members);
-        
+
         adapter.notifyDataSetChanged();
 	}
-	
+
 	/**
 	 * 点击退出群组按钮
-	 * 
+	 *
 	 * @param view
 	 */
 	public void exitGroup(View view) {
@@ -283,7 +283,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	/**
 	 * 点击解散群组按钮
-	 * 
+	 *
 	 * @param view
 	 */
 	public void exitDeleteGroup(View view) {
@@ -306,7 +306,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	/**
 	 * 退出群组
-	 * 
+	 *
 	 * @param
 	 */
 	private void exitGrop() {
@@ -338,7 +338,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	/**
 	 * 解散群组
-	 * 
+	 *
 	 * @param
 	 */
 	private void deleteGrop() {
@@ -370,13 +370,13 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	/**
 	 * 增加群成员
-	 * 
+	 *
 	 * @param newmembers
 	 */
 	private void addMembersToGroup(final String[] newmembers) {
 		final String st6 = getResources().getString(R.string.Add_group_members_fail);
 		new Thread(new Runnable() {
-			
+
 			public void run() {
 				try {
 					// 创建者调用add方法
@@ -416,7 +416,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		case R.id.clear_all_history: // 清空聊天记录
 			String st9 = getResources().getString(R.string.sure_to_empty_this);
 			new EaseAlertDialog(GroupDetailsActivity.this, null, st9, null, new AlertDialogUser() {
-                
+
                 @Override
                 public void onResult(boolean confirmed, Bundle bundle) {
                     if(confirmed){
@@ -424,7 +424,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     }
                 }
             }, true).show();
-			
+
 			break;
 
 		case R.id.rl_blacklist: // 黑名单列表
@@ -436,7 +436,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			break;
 		case R.id.rl_search:
             startActivity(new Intent(this, GroupSearchMessageActivity.class).putExtra("groupId", groupId));
-            
+
             break;
 		default:
 			break;
@@ -471,11 +471,11 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		                        Toast.makeText(getApplicationContext(), R.string.remove_group_of, Toast.LENGTH_LONG).show();
 		                    }
 		                });
-		                
+
 		            }
 		        }
 		    }).start();
-			
+
 		} else {
 			String st8 = getResources().getString(R.string.group_is_blocked);
 			final String st9 = getResources().getString(R.string.group_of_shielding);
@@ -505,7 +505,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		                    }
 		                });
 		            }
-		            
+
 		        }
 		    }).start();
 		}
@@ -513,9 +513,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	/**
 	 * 群组成员gridadapter
-	 * 
+	 *
 	 * @author admin_new
-	 * 
+	 *
 	 */
 	private class GridAdapter extends ArrayAdapter<String> {
 
@@ -647,7 +647,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 					/**
 					 * 删除群成员
-					 * 
+					 *
 					 * @param username
 					 */
 					protected void deleteMembersFromGroup(final String username) {
@@ -695,7 +695,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 					        return true;
 						if (group.getOwner().equals(EMClient.getInstance().getCurrentUser())) {
 							new EaseAlertDialog(GroupDetailsActivity.this, null, st15, null, new AlertDialogUser() {
-                                
+
                                 @Override
                                 public void onResult(boolean confirmed, Bundle bundle) {
                                     if(confirmed){
@@ -703,7 +703,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                                     }
                                 }
                             }, true).show();
-							
+
 						}
 						return false;
 					}
@@ -723,7 +723,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			public void run() {
 				try {
 				    EMClient.getInstance().groupManager().getGroupFromServer(groupId);
-					
+
 					runOnUiThread(new Runnable() {
 						public void run() {
 							((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getAffiliationsCount()
@@ -777,40 +777,40 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		super.onDestroy();
 		instance = null;
 	}
-	
+
 	private static class ViewHolder{
 	    ImageView imageView;
 	    TextView textView;
 	    ImageView badgeDeleteView;
 	}
-    
+
     private class GroupChangeListener implements EMGroupChangeListener{
 
 		@Override
 		public void onInvitationReceived(String groupId, String groupName,
 				String inviter, String reason) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onApplicationReceived(String groupId, String groupName,
 				String applyer, String reason) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onApplicationAccept(String groupId, String groupName,
 				String accepter) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onApplicationDeclined(String groupId, String groupName,
 				String decliner, String reason) {
-			
+
 		}
 
 		@Override
@@ -821,36 +821,36 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				public void run() {
 					refreshMembers();
 				}
-        		
+
         	});
-			
+
 		}
 
 		@Override
 		public void onInvitationDeclined(String groupId, String invitee,
 				String reason) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onUserRemoved(String groupId, String groupName) {
 			finish();
-			
+
 		}
 
 		@Override
 		public void onGroupDestroyed(String groupId, String groupName) {
 			finish();
-			
+
 		}
 
         @Override
         public void onAutoAcceptInvitationFromGroup(String groupId, String inviter, String inviteMessage) {
             // TODO Auto-generated method stub
-            
+
         }
-    	
+
     }
 
 }
