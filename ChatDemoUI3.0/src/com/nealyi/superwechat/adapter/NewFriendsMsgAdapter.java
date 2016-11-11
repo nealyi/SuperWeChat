@@ -58,7 +58,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = View.inflate(context, R.layout.em_row_invite_msg, null);
-            holder.avator = (ImageView) convertView.findViewById(R.id.avatar);
+            holder.avatar = (ImageView) convertView.findViewById(R.id.avatar);
             holder.reason = (TextView) convertView.findViewById(R.id.message);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.agree = (Button) convertView.findViewById(R.id.agree);
@@ -92,31 +92,33 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
             if (msg.getGroupId() != null) { // show group name
                 holder.groupContainer.setVisibility(View.VISIBLE);
                 holder.groupname.setText(msg.getGroupName());
+                EaseUserUtils.setAppGroupAvatar(context, msg.getGroupId(), holder.avatar);
             } else {
                 holder.groupContainer.setVisibility(View.GONE);
+                NetDao.searchUser(context, msg.getFrom(), new OkHttpUtils.OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if (s != null) {
+                            Result result = ResultUtils.getResultFromJson(s, User.class);
+                            if (result != null && result.isRetMsg()) {
+                                User user = (User) result.getRetData();
+                                EaseUserUtils.setAppUserAvatarPath(context, user.getAvatar(), holder.avatar);
+                                EaseUserUtils.setUserNick(user.getMUserNick(), holder.name);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
             }
 
             holder.reason.setText(msg.getReason());
 //            holder.name.setText(msg.getFrom());
             //Add avatar
-            NetDao.searchUser(context, msg.getFrom(), new OkHttpUtils.OnCompleteListener<String>() {
-                @Override
-                public void onSuccess(String s) {
-                    if (s != null) {
-                        Result result = ResultUtils.getResultFromJson(s, User.class);
-                        if (result != null && result.isRetMsg()) {
-                            User user = (User) result.getRetData();
-                            EaseUserUtils.setAppUserAvatarPath(context,user.getAvatar(),holder.avator);
-                            EaseUserUtils.setUserNick(user.getMUserNick(),holder.name);
-                        }
-                    }
-                }
 
-                @Override
-                public void onError(String error) {
-
-                }
-            });
             // holder.time.setText(DateUtils.getTimestampString(new
             // Date(msg.getTime())));
             if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEAGREED) {
@@ -304,7 +306,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
     }
 
     private static class ViewHolder {
-        ImageView avator;
+        ImageView avatar;
         TextView name;
         TextView reason;
         Button agree;
