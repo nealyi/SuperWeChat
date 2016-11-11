@@ -84,6 +84,7 @@ public class FriendProfileActivity extends BaseActivity {
                     if (result != null && result.isRetMsg()) {
                         user = (User) result.getRetData();
                         if (user != null) {
+                            SuperWeChatHelper.getInstance().saveAppContact(user);
                             setUserInfo();
                         }
                     }
