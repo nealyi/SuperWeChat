@@ -14,6 +14,7 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.nealyi.superwechat.I;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.SuperWeChatHelper;
+import com.nealyi.superwechat.utils.L;
 import com.nealyi.superwechat.utils.MFGT;
 
 import butterknife.BindView;
@@ -22,6 +23,7 @@ import butterknife.OnClick;
 
 
 public class FriendProfileActivity extends BaseActivity {
+    private static final String TAG = FriendProfileActivity.class.getSimpleName();
 
     @BindView(R.id.iv_back)
     ImageView mIvBack;
@@ -44,17 +46,21 @@ public class FriendProfileActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        L.e(TAG,"onCreate...");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
         ButterKnife.bind(this);
         user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
+        L.e(TAG,"onCreate,user="+user);
         if (user == null) {
             MFGT.finish(this);
+            return;
         }
         initView();
     }
 
     private void initView() {
+        L.e(TAG,"initView,user="+user);
         mIvBack.setVisibility(View.VISIBLE);
         mTvCommonTitle.setVisibility(View.VISIBLE);
         mTvCommonTitle.setText(getResources().getString(R.string.detail_information));
@@ -73,6 +79,8 @@ public class FriendProfileActivity extends BaseActivity {
     }
 
     private void setUserInfo() {
+        L.e(TAG,"user = "+user);
+        L.e(TAG,"username = "+user.getMUserName());
         EaseUserUtils.setAppUserAvatar(this, user.getMUserName(), mIvAvatar);
         mTvNick.setText(user.getMUserNick());
         mTvUsername.setText(user.getMUserName());
