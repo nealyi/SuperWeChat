@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroupInfo;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.nealyi.superwechat.R;
 import com.hyphenate.exceptions.HyphenateException;
 
@@ -167,10 +169,12 @@ public class PublicGroupsActivity extends BaseActivity {
 	private class GroupsAdapter extends ArrayAdapter<EMGroupInfo> {
 
 		private LayoutInflater inflater;
+        Context mContext;
 
 		public GroupsAdapter(Context context, int res, List<EMGroupInfo> groups) {
 			super(context, res, groups);
-			this.inflater = LayoutInflater.from(context);
+            mContext = context;
+            this.inflater = LayoutInflater.from(context);
 		}
 
 		@Override
@@ -180,8 +184,10 @@ public class PublicGroupsActivity extends BaseActivity {
 			}
 
 			((TextView) convertView.findViewById(R.id.name)).setText(getItem(position).getGroupName());
+            EaseUserUtils.setAppGroupAvatar(mContext, getItem(position).getGroupId(), (ImageView) convertView.findViewById(R.id.avatar));
 
-			return convertView;
+
+            return convertView;
 		}
 	}
 	
