@@ -7,6 +7,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.nealyi.superwechat.I;
+import com.nealyi.superwechat.SuperWeChatHelper;
 import com.nealyi.superwechat.bean.Result;
 
 
@@ -133,6 +134,23 @@ public class NetDao {
                 .addFile2(file)
                 .targetClass(String.class)
                 .post()
+                .execute(listener);
+    }
+
+    public static void addGroupMembers(Context context, EMGroup emGroup, OkHttpUtils.OnCompleteListener<String> listener) {
+        String memberArr = "";
+        for (String m : emGroup.getMembers()) {
+            if (!m.equals(SuperWeChatHelper.getInstance().getCurrentUsernName())) {
+                memberArr += m + ",";
+            }
+        }
+        memberArr = memberArr.substring(0, memberArr.length()-1);
+        L.e("addGroupMembers", "memberArr=" + memberArr);
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBERS)
+                .addParam(I.Member.GROUP_HX_ID, emGroup.getGroupId())
+                .addParam(I.Member.USER_NAME, memberArr)
+                .targetClass(String.class)
                 .execute(listener);
     }
 }

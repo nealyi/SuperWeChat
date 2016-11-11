@@ -44,6 +44,7 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.nealyi.superwechat.I;
 import com.nealyi.superwechat.R;
 import com.nealyi.superwechat.bean.Result;
+import com.nealyi.superwechat.utils.CommonUtils;
 import com.nealyi.superwechat.utils.L;
 import com.nealyi.superwechat.utils.MFGT;
 import com.nealyi.superwechat.utils.NetDao;
@@ -86,6 +87,7 @@ public class NewGroupActivity extends BaseActivity {
 
     private ProgressDialog progressDialog;
     File file = null;
+    EMGroup emGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,8 +180,8 @@ public class NewGroupActivity extends BaseActivity {
                     } else {
                         option.style = mCbMemberInviter.isChecked() ? EMGroupStyle.EMGroupStylePrivateMemberCanInvite : EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
                     }
-                    EMGroup emGroup = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
-                    createAppGroup(emGroup);
+                    emGroup = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
+                    createAppGroup();
                 } catch (final HyphenateException e) {
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -193,45 +195,61 @@ public class NewGroupActivity extends BaseActivity {
         }).start();
     }
 
-    private void createAppGroup(EMGroup emGroup) {
+    private void createAppGroup() {
         if (file == null) {
-            NetDao.createrGroup(this, emGroup, new OkHttpUtils.OnCompleteListener<String>() {
-                @Override
-                public void onSuccess(String s) {
-                    afterCreateAppGroup(s);
-                }
-
-                @Override
-                public void onError(String error) {
-
-                }
-            });
+            NetDao.createrGroup(this, emGroup, mListener);
         } else {
-            NetDao.createrGroup(this, emGroup, file, new OkHttpUtils.OnCompleteListener<String>() {
-                @Override
-                public void onSuccess(String s) {
-                    afterCreateAppGroup(s);
-                }
-
-                @Override
-                public void onError(String error) {
-
-                }
-            });
+            NetDao.createrGroup(this, emGroup, file, mListener);
         }
     }
 
-    private void afterCreateAppGroup(String s) {
-        if (s != null) {
-            Result result = ResultUtils.getResultFromJson(s, Group.class);
-            L.e(TAG, "result=" + result);
-            if (result != null && result.isRetMsg()) {
-                Group group = (Group) result.getRetData();
-                createGroupSucess();
+    OkHttpUtils.OnCompleteListener<String> mListener = new OkHttpUtils.OnCompleteListener<String>() {
+        @Override
+        public void onSuccess(String s) {
+            if (s != null) {
+                Result result = ResultUtils.getResultFromJson(s, Group.class);
+                L.e(TAG, "result=" + result);
+                if (result != null && result.isRetMsg()) {
+                    if (emGroup != null && emGroup.getMembers() != null && emGroup.getMembers().size() > 1) {
+                        addGroupMembers();
+                    } else {
+                        createGroupSucess();
+                    }
+                } else {
+                    progressDialog.dismiss();
+                    CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+                }
             } else {
-                createGroupSucess();
+                progressDialog.dismiss();
+                CommonUtils.showShortToast(R.string.Failed_to_create_groups);
             }
         }
+
+        @Override
+        public void onError(String error) {
+            progressDialog.dismiss();
+            CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+        }
+    };
+
+    private void addGroupMembers() {
+        NetDao.addGroupMembers(this, emGroup, new OkHttpUtils.OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, Group.class);
+                    if (result != null && result.isRetMsg()) {
+                        Group group = (Group) result.getRetData();
+                        createGroupSucess();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
     private void createGroupSucess() {
